@@ -11,6 +11,23 @@ public class Product {
     public Product(int id, String nume, double pret,
                   CategorieBautura categorie,
                   TipBautura tip) {
+
+        if (id < 0) {
+            throw new IllegalArgumentException("ID-ul trebuie sa fie pozitiv");
+        }
+        if (nume == null || nume.isEmpty()) {
+            throw new IllegalArgumentException("Numele nu poate fi gol");
+        }
+        if (pret < 0) {
+            throw new IllegalArgumentException("Pretul trebuie sa fie pozitiv");
+        }
+        if (categorie == null) {
+            throw new IllegalArgumentException("Categoria nu poate fi nula");
+        }
+        if (tip == null) {
+            throw new IllegalArgumentException("Tipul nu poate fi nul");
+        }
+
         this.id = id;
         this.nume = nume;
         this.pret = pret;
