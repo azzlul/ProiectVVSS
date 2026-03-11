@@ -120,7 +120,7 @@ public class DrinkShopController {
             alert.showAndWait();
             return;
         }else
-        if (service.getAllProducts().stream().filter(p->p.getId()==r.getId()).toList().size()>0) {
+        if (!service.getAllProducts().stream().filter(p -> p.getId() == r.getId()).toList().isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Error");
             alert.setHeaderText("Exista un produs cu reteta adaugata.");
@@ -167,6 +167,10 @@ public class DrinkShopController {
     // ---------- RETETA NOUA ----------
     @FXML
     private void onAddNewIngred() {
+        if (txtNewIngredName.getText().isEmpty() || txtNewIngredCant.getText().isEmpty()) {
+            showError("Completeaza toate campurile ingredientului.");
+            return;
+        }
         newRetetaList.add(new IngredientReteta(txtNewIngredName.getText(),
                 Double.parseDouble(txtNewIngredCant.getText())));
     }
@@ -179,6 +183,10 @@ public class DrinkShopController {
 
     @FXML
     private void onAddNewReteta() {
+        if(newRetetaList.isEmpty()) {
+            showError("Adauga cel putin un ingredient in reteta.");
+            return;
+        }
         Reteta r = new Reteta(service.getAllRetete().size()+1, new ArrayList<>(newRetetaList));
         service.addReteta(r);
         newRetetaList.clear();
@@ -222,6 +230,11 @@ public class DrinkShopController {
 
     @FXML
     private void onFinalizeOrder() {
+        if(currentOrderItems.isEmpty()) {
+            showError("Adauga cel putin un produs in comanda.");
+            return;
+        }
+
         currentOrder.getItems().clear();
         currentOrder.getItems().addAll(currentOrderItems);
         currentOrder.computeTotalPrice();

@@ -15,6 +15,10 @@ public class DailyReportService {
     }
 
     public double getTotalRevenue() {
+        if(repo.findAll().isEmpty())
+        {
+            return 0.0;
+        }
         return repo.findAll().stream().mapToDouble(Order::getTotal).sum();
     }
 

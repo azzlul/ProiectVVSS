@@ -19,6 +19,10 @@ public class OrderService {
     }
 
     public void addOrder(Order o) {
+        if (o.getItems().isEmpty())
+        {
+            throw new IllegalArgumentException("Order must have at least one item");
+        }
         orderRepo.save(o);
     }
 

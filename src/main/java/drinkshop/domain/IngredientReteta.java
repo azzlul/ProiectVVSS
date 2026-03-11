@@ -6,6 +6,12 @@ public class IngredientReteta {
     private double cantitate;
 
     public IngredientReteta(String denumire, double cantitate) {
+        if(denumire == null || denumire.isEmpty()) {
+            throw new IllegalArgumentException("Denumirea ingredientului nu poate fi nula sau goala.");
+        }
+        if(cantitate <= 0) {
+            throw new IllegalArgumentException("Cantitatea trebuie sa fie pozitiva.");
+        }
         this.denumire = denumire;
         this.cantitate = cantitate;
     }
