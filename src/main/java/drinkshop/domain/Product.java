@@ -15,12 +15,6 @@ public class Product {
         if (id < 0) {
             throw new IllegalArgumentException("ID-ul trebuie sa fie pozitiv");
         }
-        if (nume == null || nume.isEmpty()) {
-            throw new IllegalArgumentException("Numele nu poate fi gol");
-        }
-        if (pret < 0) {
-            throw new IllegalArgumentException("Pretul trebuie sa fie pozitiv");
-        }
         if (categorie == null) {
             throw new IllegalArgumentException("Categoria nu poate fi nula");
         }
