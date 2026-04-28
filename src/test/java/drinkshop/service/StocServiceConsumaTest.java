@@ -8,9 +8,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
@@ -446,24 +445,33 @@ class StocServiceConsumaTest {
             verify(stocRepoMock).update(argThat(s -> s.getId() == 3 && s.getCantitate() == 0));
         }
 
-        @ParameterizedTest
-        @CsvSource({
-                "10.5, 5", // Fractional quantity consumption
-                "1.0, 9",   // Small quantity
-                "100.0, 0", // Large quantity complete consumption
-        })
+        @Test
         @DisplayName("SC8: Various quantity values")
-        void testConsumaVariousQuantities(double required, double remaining) {
-            // Arrange
-            stocList.add(new Stoc(1, "Item", (int)(required + remaining), 5));
+        void testConsumaVariousQuantities() {
+            // Case 1: Fractional quantity consumption
+            stocList.clear();
+            stocList.add(new Stoc(1, "Item", (int)(10.5 + 5), 5));
             when(stocRepoMock.findAll()).thenReturn(stocList);
+            stocService.consuma(createReceta(1, createIngredient("Item", 10.5)));
+            verify(stocRepoMock, times(1)).update(any(Stoc.class));
 
-            Reteta recipe = createReceta(1, createIngredient("Item", required));
+            // reset interactions for next case
+            Mockito.reset(stocRepoMock);
 
-            // Act
-            stocService.consuma(recipe);
+            // Case 2: Small quantity
+            stocList.clear();
+            stocList.add(new Stoc(1, "Item", (int)(1.0 + 9), 5));
+            when(stocRepoMock.findAll()).thenReturn(stocList);
+            stocService.consuma(createReceta(1, createIngredient("Item", 1.0)));
+            verify(stocRepoMock, times(1)).update(any(Stoc.class));
 
-            // Assert
+            Mockito.reset(stocRepoMock);
+
+            // Case 3: Large quantity complete consumption
+            stocList.clear();
+            stocList.add(new Stoc(1, "Item", (int)(100.0 + 0), 5));
+            when(stocRepoMock.findAll()).thenReturn(stocList);
+            stocService.consuma(createReceta(1, createIngredient("Item", 100.0)));
             verify(stocRepoMock, times(1)).update(any(Stoc.class));
         }
     }
@@ -482,7 +490,3 @@ class StocServiceConsumaTest {
         return new IngredientReteta(name, quantity);
     }
 }
-
-
-
-
