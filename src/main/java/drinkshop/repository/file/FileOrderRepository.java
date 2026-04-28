@@ -55,9 +55,7 @@ public class FileOrderRepository
         StringBuilder sb = new StringBuilder();
 
         for (OrderItem item : entity.getItems()) {
-
-            if (sb.isEmpty()) {
-                //modificat
+            if (sb.length() != 0) {
                 sb.append("|");
             }
 
